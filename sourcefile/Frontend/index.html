@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chemnitz Cultural Guide</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+  
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  color: #4A4E69;
+}
+
+:root {
+  --blush-pink: #F4C4C4;
+  --slate-gray: #4A4E69;
+  --mint-green: #9AE3D4;
+  --white: #FFFFFF;
+  --text-color: #4A4E69;
+  --coral: coral;
+}
+
+#introModal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* no background color so image shows fully */
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: flex-end;     /* align content near bottom */
+  padding-bottom: 80px;     /* adjust vertical position down */
+  z-index: 10002;
+  transition: opacity 0.8s ease;
+  overflow: hidden;
+}
+
+#introModal img {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center; 
+}
+
+
+/* Container for text */
+#introText {
+  position: absolute; 
+   top: 80%;
+   left: 50%;
+
+  transform: translate(-50%);
+  z-index: 2;
+  max-width: 600px;
+  padding: 20px 30px;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.4;
+   background-color: transparent;
+  
+  border-radius: 12px;
+  /* Animation */
+  opacity: 0;
+ transform: translateY(15px) scale(0.95);
+  animation: fadeSlideUp 1s ease forwards;
+  animation-delay: 0.2s; /* slight delay */
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+#introText h1 {
+  font-family: 'Georgia', serif;
+  color: #FFFFFF; /* white text */
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-shadow:
+    0 0 6px #FF6F61,   /* soft orange-pink glow */
+    0 0 12px #FF6F61,  /* stronger glow */
+    0 0 18px #FF6F61;  /* extended glow */
+}
+
+#introText p {
+  font-family: 'Arial', sans-serif;
+  color: #FFFFFF; /* white text */
+  font-weight: 300;
+  font-size: 1rem;
+  text-shadow:
+    0 0 4px #FF6F61,   /* softer orange-pink glow */
+    0 0 8px #FF6F61;
+  margin-top: 0;
+}
+
+
+#introModal.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+
+
+nav {
+  padding-top:0;
+  padding-bottom: 0;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  color: #4A4E69;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 10001;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-wrap: nowrap;
+}
+
+nav .nav-left,
+nav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+nav .nav-right {
+  flex-shrink: 0;
+}
+
+nav .nav-right button,
+nav .nav-right img#navAvatar {
+  flex-shrink: 0;
+}
+
+nav a,
+nav button,
+nav select,
+nav input[type="text"] {
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  line-height: 1.4;
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+nav a:hover,
+nav button:hover {
+  background-color: var(--mint-green);
+  outline: none;
+  text-decoration: none;
+}
+
+nav select:focus,
+nav input[type="text"]:focus {
+  outline: none;
+}
+
+nav .nav-left > select#categoryFilter,
+nav .nav-left > input#searchInput {
+  color: #4A4E69;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  background: transparent;
+  min-width: 140px;
+  margin-right: 0.5rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  border: none;
+  display: inline-block;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav .nav-left > select#categoryFilter {
+  padding-right: 10px;
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: auto;
+  margin-right: 0.3rem;
+}
+
+nav .nav-left > select#categoryFilter:hover,
+nav .nav-left > select#categoryFilter:focus,
+nav .nav-left > input#searchInput:hover,
+nav .nav-left > input#searchInput:focus {
+  background-color: #9AE3D4;
+  outline: none;
+  text-decoration: none;
+}
+
+nav .nav-left > input#searchInput {
+  width: 180px;
+  cursor: text;
+  color: #4A4E69;
+  margin-left: 0.3rem;
+}
+
+nav .nav-left > input#searchInput::placeholder {
+  color: #4A4E69;
+  opacity: 1;
+}
+
+nav .nav-right > button#findMeBtn {
+  font-size: 1rem;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #4A4E69;
+  margin-left: 1rem;
+  white-space: nowrap;
+  border-radius: 4px;
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-sizing: border-box;
+  
+}
+
+nav .nav-right > button#findMeBtn:hover,
+nav .nav-right > button#findMeBtn:focus {
+  background-color: #9AE3D4;
+  outline: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+#navAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1.5px solid #4A4E69;
+  object-fit: cover;
+  margin-left: 0.5rem;
+  transition: box-shadow 0.3s ease;
+  display: inline-block;
+}
+
+#navAvatar:hover {
+  box-shadow: 0 0 8px #9AE3D4;
+}
+
+#logoutBtn,
+#openLoginBtn,
+#openRegisterBtn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #4A4E69;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-left: 0.7rem;
+  white-space: nowrap;
+  text-align: center;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+}
+
+#logoutBtn:hover,
+#openLoginBtn:hover,
+#openRegisterBtn:hover {
+  background-color: #9AE3D4;
+  outline: none;
+  text-decoration: none;
+}
+
+nav a#homeLink img,
+nav button#findMeBtn img {
+  width: 24px;
+  height: 24px;
+  margin-right: 1px;
+  vertical-align: middle;
+  object-fit: contain;
+}
+
+
+  
+#profileButtonsContainer {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  justify-content: flex-start; /* aligns buttons to the left */
+};
+
+#profileButtonsContainer button {
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+
+#profileForm button[type="submit"],
+#profileLogoutBtn {
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+  width: auto !important;
+  flex: 0 0 auto; /* fix flex growth */
+  white-space: nowrap; /* prevent button text wrap */
+}
+
+#profileForm button[type="submit"] {
+  background-color: gray;
+}
+
+#profileForm button[type="submit"]:hover {
+  background-color: #555;
+}
+
+#profileLogoutBtn {
+  background-color: orange;
+}
+
+#profileLogoutBtn:hover {
+  background-color: #e67300;
+}
+
+/* Wrap buttons container for alignment */
+#profileForm,
+#profileLogoutBtn {
+  vertical-align: middle;
+}
+
+/* To keep both buttons aligned horizontally */
+#profileForm {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#profileLogoutBtn {
+  display: inline-block;
+}
+#profileUsername {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  font-weight: 600;
+  border-bottom: 1px solid #F4C4C4; /* subtle horizontal line */
+  color: var(--slate-gray);
+  font-size: 1.1rem;
+}
+
+
+/* Align vertical padding/margin for nav items to be consistent */
+nav a, nav button, nav select, nav input[type="text"] {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Main container and layout */
+#mainContainer {
+  display: flex;
+  height: calc(100vh - 40px);
+  margin-top: 40px;
+}
+
+#mainContainer.hideList #list {
+  display: none;
+}
+
+#mainContainer.hideList #map {
+  flex-grow: 1;
+  width: 100% !important;
+}
+
+#list {
+  width: 320px;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+}
+
+
+
+#map {
+  flex-grow: 1;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(74, 78, 105, 0.1);
+  border: 1px solid #ddd;
+  position: relative;
+  padding-top: 45px; /* adds padding so content inside doesn't overlap nav */
+  box-sizing: border-box;
+}
+
+/* Adjust Leaflet zoom controls position */
+.leaflet-control-zoom {
+  top: 55px !important; /* pushes controls down to align below nav */
+  left: 12px !important; /* adds left margin */
+}
+
+.leaflet-popup-content-wrapper {
+  max-width: 300px !important;
+  max-height: 200px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.leaflet-popup-content {
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--slate-gray);
+}
+
+
+
+/* Cards */
+.site-card {
+  background: var(--white);
+  border: 1.5px solid var(--blush-pink);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.3rem;
+  box-shadow: 0 2px 10px rgba(244, 196, 196, 0.3);
+  transition: all 0.25s ease;
+  position: relative;
+  color: var(--slate-gray);
+}
+
+.site-card.highlight {
+  background-color: #dcf6ef;
+  border-color: var(--mint-green);
+  box-shadow: 0 0 12px rgba(154, 227, 212, 0.8);
+}
+
+.site-card:hover {
+  background-color: #c9f0e4;
+  cursor: pointer;
+  border-color: var(--mint-green);
+  box-shadow: 0 4px 16px rgba(154, 227, 212, 0.5);
+}
+
+/* Favorite button */
+.fav-btn {
+  font-size: 18px;
+  background: none;
+  border: none; 
+  cursor: pointer;
+  padding: 0 5px 0 0;
+  transition: color 0.3s ease;
+  user-select: none;
+}
+
+.fav-btn.unfavorited {
+  color: transparent;
+  -webkit-text-stroke: 1.5px coral;
+  text-stroke: 1.5px coral;
+}
+
+.fav-btn.favorited {
+  color: coral;
+  -webkit-text-stroke: 0;
+  text-stroke: 0;
+}
+
+/* Footer */
+footer {
+  background-color: var(--slate-gray);
+  color: var(--white);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 3rem;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+
+
+/* Align zoom controls and minimap controls */
+.leaflet-control-zoom {
+  top: 15px !important; /* tweak vertical alignment */
+  left: 10px !important;
+}
+
+.leaflet-control-minimap {
+  top: 15px !important;  /* align with zoom controls */
+  right: 10px !important;
+}
+
+/* Optional: Adjust minimap size for better fit */
+.leaflet-control-minimap {
+  width: 150px !important; /* adjust size */
+  height: 150px !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+
+/* Map tooltip */
+.leaflet-tooltip.marker-label {
+  background-color: var(--white);
+  color: var(--slate-gray);
+  border: 1px solid #888;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal base */
+.modal {
+  display: none;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.modal.show {
+  display: flex !important;
+}
+
+
+/* Keep existing modal content box styles */
+#loginModal .modal-content,
+#registerModal .modal-content {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 20px 25px;  /* keep larger padding */
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Style for Login and Register buttons */
+#loginModal button[type="submit"],
+#registerModal button[type="submit"] {
+  margin-top: 12px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  width: auto;
+  display: inline-block;
+}
+
+#loginModal button[type="submit"]:hover,
+#registerModal button[type="submit"]:hover {
+  background-color: #e67300;
+}
+
+
+
+
+
+/* Profile modal styles */
+#profileModal {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  width: 350px;
+  
+  max-height: 400px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  z-index: 10002;
+  display: none;
+}
+
+#profileModal .modal-content {
+  background: transparent;
+  box-shadow: none;
+  padding: 20px;
+  max-height: none;
+  border-radius: 0;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--slate-gray);
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  color: var(--mint-green);
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--slate-gray);
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.underline-text {
+  padding: 6px 0;
+  border-bottom: 1.5px solid var(--blush-pink);
+  color: var(--slate-gray);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border-radius: 0;
+  outline: none;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content textarea {
+  border: none;
+  border-bottom: 1.5px solid var(--blush-pink);
+  background: transparent;
+  padding: 6px 0;
+  font-size: 1rem;
+  color: var(--slate-gray);
+  width: 100%;
+  box-sizing: border-box;
+  outline-offset: 2px;
+  transition: border-color 0.3s ease;
+  resize: vertical;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus,
+.modal-content input[type="password"]:focus,
+.modal-content textarea:focus {
+  border-bottom-color: var(--mint-green);
+  outline: none;
+}
+
+
+
+/* Icons in navbar */
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 8px;
+  object-fit: contain;
+}
+#mobileMenuBtn {
+  display: none;
+}
+
+/* Responsive adjustments */
+
+/* Tablet: 601px to 900px */
+@media (min-width: 601px) and (max-width: 900px) {
+  nav {
+    padding: 0 1rem;
+  }
+  nav .nav-left,
+  nav .nav-right {
+    gap: 0.5rem;
+  }
+  nav a, nav button, nav select, nav input[type="text"] {
+    padding: 4px 6px;
+    font-size: 0.9rem;
+  }
+  nav a#homeLink,
+  nav button#findMeBtn {
+    font-size: 1rem;
+    padding: 6px 10px;
+    margin: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  nav a#homeLink img,
+  nav button#findMeBtn img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 6px;
+    object-fit: contain;
+  }
+}
+@media (max-width: 600px) {
+  /* Hide desktop places link and category filter */
+  .places-link, #categoryFilter {
+    display: none !important;
+  }
+
+  /* Mobile menu button */
+  #mobileMenuBtn {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-left: 8px;
+  }
+
+  #mobileMenuBtn img {
+    width: 16px;  
+    height: 16px; 
+  }
+
+  /* Mobile menu */
+  #mobileMenu {
+    display: none; /* toggle with JS */
+    position: absolute;
+    top: 45px;
+    left: 0;
+    background: var(--white);
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 10px;
+    width: 160px;
+    z-index: 10003;
+    flex-direction: column;
+  }
+
+  /* Search input smaller */
+  nav .nav-left > input#searchInput {
+    width: 80px;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+  }
+
+  /* Reduce gaps and padding in nav */
+  nav .nav-left,
+  nav .nav-right {
+    gap: 0.1rem;
+  }
+
+  nav a, nav button, nav select, nav input[type="text"] {
+    margin: 0;
+    padding: 2px 3px;
+    font-size: 0.8rem;
+  }
+
+  /* Show only icons on home and location */
+  nav a#homeLink,
+  nav button#findMeBtn {
+    font-size: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  nav a#homeLink img,
+  nav button#findMeBtn img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin-right: 0;
+    object-fit: contain;
+  }
+
+  /* Smaller heading sizes */
+  h1 { font-size: 1.2rem; }
+  h2 { font-size: 1rem; }
+  h3 { font-size: 0.9rem; }
+  h4 { font-size: 0.8rem; }
+  h5 { font-size: 0.75rem; }
+  h6 { font-size: 0.7rem; }
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="introModal" role="dialog" aria-modal="true" aria-label="Welcome">
+  <img src="/public/images/chemnitzcity.png" alt="Chemnitz City" />
+  <div id="introText">
+    <h1>Welcome to Chemnitz where history meets modernity</h1>
+    <p>Find landmarks and hidden treasures with our interactive map.</p>
+  </div>
+</div>
+
+
+  <nav>
+    <div class="nav-left" style="position: relative; display: flex; align-items: center;">
+      <a href="#" id="homeLink" aria-label="Home">
+        <img src="/public/images/home.png" alt="Home" />
+      </a>
+
+      <!-- Mobile three dots menu button -->
+      <button id="mobileMenuBtn" aria-label="Open menu" title="Open menu" aria-expanded="false">
+        <img src="/public/images/dots.png" alt="Menu Dots" style="width:20px; height:20px;" />
+      </button>
+
+      <!-- Mobile dropdown menu -->
+      <div id="mobileMenu" aria-hidden="true" role="menu" tabindex="-1" style="display:none;">
+        <a href="#" id="showAllSitesMobile" role="menuitem" tabindex="0">Places</a>
+        <select id="categoryFilterMobile" aria-label="Filter categories" role="menuitem" tabindex="0" style="margin-top: 10px;">
+          <option value="all">All Categories</option>
+          <option value="museum">Museum</option>
+          <option value="gallery">Gallery</option>
+          <option value="theatre">Theatre</option>
+          <option value="attractions">Attractions</option>
+          <option value="restaurant">Restaurant</option>
+        </select>
+      </div>
+
+      <!-- Desktop and tablet Places link and category dropdown -->
+      <a href="#" id="showAllSites" class="places-link">Places</a>
+      <select id="categoryFilter" aria-label="Filter categories">
+        <option value="all">All Categories</option>
+        <option value="museum">Museum</option>
+        <option value="gallery">Gallery</option>
+        <option value="theatre">Theatre</option>
+        <option value="attractions">Attractions</option>
+        <option value="restaurant">Restaurant</option>
+      </select>
+
+      <input type="text" id="searchInput" placeholder="Search by name..." aria-label="Search by name" />
+    </div>
+
+    <div class="nav-right">
+      <button id="findMeBtn" title="My Location">
+        <img src="/public/images/location.png" alt="Location Icon" class="nav-icon" />
+      </button>
+      <img id="navAvatar" src="/public/images/Userprofile.png" alt="User Avatar" title="Profile" />
+      <button id="openLoginBtn" class="nav-link">Login</button>
+      <button id="openRegisterBtn" class="nav-link">Register</button>
+    </div>
+  </nav>
+
+  <div id="mainContainer" class="hideList">
+    <div id="list"></div>
+    <div id="map"></div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="closeRegisterBtn" title="Close">&times;</button>
+      <h2 id="registerTitle">Register</h2>
+      <form id="modalRegisterForm">
+        <label for="modalUsername">Username</label>
+        <input id="modalUsername" type="text" placeholder="Username" required class="underline-text" />
+        <label for="modalEmail">Email</label>
+        <input id="modalEmail" type="email" placeholder="Email" required />
+        <label for="modalPassword">Password</label>
+        <input id="modalPassword" type="password" placeholder="Password" required />
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="closeLoginBtn" title="Close">&times;</button>
+      <h2 id="loginTitle">Login</h2>
+      <form id="modalLoginForm">
+        <label for="modalLoginEmail">Email</label>
+        <input id="modalLoginEmail" type="email" placeholder="Email" required />
+        <label for="modalLoginPassword">Password</label>
+        <input id="modalLoginPassword" type="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+  <div class="modal-content">
+    <button class="modal-close-btn" id="closeProfileBtn" title="Close">&times;</button>
+    <h2 id="profileTitle">Your Profile</h2>
+    <form id="profileForm">
+      <div id="profileUsername"></div>
+      <label for="profileEmail">Email</label>
+      <input id="profileEmail" type="email" placeholder="Email" required />
+      <label for="profileBio">Bio</label>
+      <textarea id="profileBio" placeholder="Tell us a bit about yourself..." rows="3"></textarea>
+
+      <!-- Buttons wrapped inside container -->
+      <div id="profileButtonsContainer">
+        <button type="submit">Save Changes</button>
+        <button type="button" id="profileLogoutBtn">Logout</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+ 
+
+
+
+
+
+  <footer>
+    <p>&copy; 2025 Chemnitz Cultural Guide | TU Chemnitz Project</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const API_BASE_URL = 'http://localhost:4000';
+
+    // --- Variables ---
+    const introModal = document.getElementById('introModal');
+    const nav = document.querySelector('nav');
+    const mainContainer = document.getElementById('mainContainer');
+
+    const navAvatar = document.getElementById('navAvatar');
+    const openLoginBtn = document.getElementById('openLoginBtn');
+    const openRegisterBtn = document.getElementById('openRegisterBtn');
+
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const profileModal = document.getElementById('profileModal');
+
+    const profileForm = document.getElementById('profileForm');
+    const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const showAllSitesMobile = document.getElementById('showAllSitesMobile');
+    const categoryFilterMobile = document.getElementById('categoryFilterMobile');
+
+    // --- Intro modal hide/show ---
+    function hideIntroModal() {
+      introModal.classList.add('hide');
+      setTimeout(() => {
+        introModal.style.display = 'none';
+      }, 800);
+      nav.style.display = 'flex';
+    }
+
+    window.addEventListener('load', () => {
+      nav.style.display = 'none';
+      setTimeout(hideIntroModal, 4000);
+    });
+
+    introModal.addEventListener('click', () => {
+      nav.style.display = 'flex';
+      hideIntroModal();
+    });
+
+    // --- Modal open/close ---
+    openLoginBtn.addEventListener('click', () => {
+      loginModal.classList.add('show');
+      registerModal.classList.remove('show');
+    });
+
+    openRegisterBtn.addEventListener('click', () => {
+      registerModal.classList.add('show');
+      loginModal.classList.remove('show');
+    });
+
+    document.getElementById('closeLoginBtn').addEventListener('click', () => {
+      loginModal.classList.remove('show');
+    });
+
+    document.getElementById('closeRegisterBtn').addEventListener('click', () => {
+      registerModal.classList.remove('show');
+    });
+
+    document.getElementById('closeProfileBtn').addEventListener('click', () => {
+      profileModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === loginModal) loginModal.classList.remove('show');
+      if (e.target === registerModal) registerModal.classList.remove('show');
+
+      if (e.target !== navAvatar && !profileModal.contains(e.target)) {
+        profileModal.style.display = 'none';
+      }
+    });
+
+    // --- Login/Logout UI Updates ---
+    function updateUIForLoggedInUser(user) {
+      openLoginBtn.style.display = 'none';
+      openRegisterBtn.style.display = 'none';
+
+      navAvatar.style.display = 'inline-block';
+      navAvatar.src = user.avatar || '/public/images/Userprofile.png';
+      navAvatar.title = user.username || '';
+    }
+
+    function resetUIForLoggedOutUser() {
+      openLoginBtn.style.display = 'inline-block';
+      openRegisterBtn.style.display = 'inline-block';
+
+      navAvatar.style.display = 'none';
+      navAvatar.src = '/public/images/Userprofile.png';
+      navAvatar.title = '';
+    }
+
+    function checkLoginStatus() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const user = {
+          username: localStorage.getItem('username'),
+          avatar: localStorage.getItem('avatar'),
+        };
+        updateUIForLoggedInUser(user);
+      } else {
+        resetUIForLoggedOutUser();
+      }
+    }
+
+    // --- Load bio from localStorage ---
+    function loadBioFromStorage() {
+      const bio = localStorage.getItem('bio');
+      if (bio) {
+        document.getElementById('profileBio').value = bio;
+      }
+    }
+
+    // --- Save bio to backend and localStorage ---
+    async function saveBioToBackend(newBio) {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ bio: newBio }),
+        });
+        if (res.ok) {
+          localStorage.setItem('bio', newBio);
+        } else {
+          console.error('Failed to update bio on server.');
+        }
+      } catch (err) {
+        console.error('Error updating bio:', err);
+      }
+    }
+
+    // --- Login form submit ---
+    const modalLoginForm = document.getElementById('modalLoginForm');
+    modalLoginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('modalLoginEmail').value.trim();
+      const password = document.getElementById('modalLoginPassword').value;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('username', result.user.username);
+          localStorage.setItem('email', result.user.email);
+          localStorage.setItem('avatar', result.user.avatar || '/public/images/Userprofile.png');
+          localStorage.setItem('userId', result.user._id);
+          localStorage.setItem('bio', result.user.bio || ''); // Save bio if returned
+
+          setMemberSinceIfNotExists();
+
+          updateUIForLoggedInUser(result.user);
+          loginModal.classList.remove('show');
+
+          alert('Welcome back, ' + result.user.username + '!');
+          await fetchUserFavoritesSet();
+          updateMapMarkers(allSites);
+          renderList(allSites);
+        } else {
+          alert(result.message || 'Login failed. Please check your credentials.');
+        }
+      } catch {
+        alert('An error occurred during login. Please try again.');
+      }
+    });
+
+    // --- Register form submit ---
+    const modalRegisterForm = document.getElementById('modalRegisterForm');
+    modalRegisterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('modalUsername').value.trim();
+      const email = document.getElementById('modalEmail').value.trim();
+      const password = document.getElementById('modalPassword').value;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert(`Welcome, ${result.user.username}! Registration successful.`);
+          localStorage.setItem('userId', result.user._id);
+          modalRegisterForm.reset();
+          registerModal.classList.remove('show');
+
+          setMemberSinceIfNotExists();
+
+          await fetchUserFavoritesSet();
+          updateMapMarkers(allSites);
+          renderList(allSites);
+        } else {
+          alert(result.message || 'Registration failed.');
+        }
+      } catch {
+        alert('An error occurred during registration. Please try again.');
+      }
+    });
+
+    // --- Profile form submit (save changes) ---
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const updatedEmail = profileForm.profileEmail.value.trim();
+      const updatedBio = document.getElementById('profileBio').value.trim();
+
+      localStorage.setItem('email', updatedEmail);
+      await saveBioToBackend(updatedBio);
+
+      alert('Profile updated!');
+      profileModal.style.display = 'none';
+    });
+
+    // --- Logout button ---
+    profileLogoutBtn.addEventListener('click', () => {
+      localStorage.clear();
+      resetUIForLoggedOutUser();
+      profileModal.style.display = 'none';
+      alert('You have been logged out.');
+    });
+
+    // --- Member since ---
+    function setMemberSinceIfNotExists() {
+      if (!localStorage.getItem('memberSince')) {
+        const today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem('memberSince', today);
+      }
+    }
+
+    // --- Map variables ---
+    let markers = [];
+    let userLocation = null;
+    let allSites = [];
+    let userFavorites = new Set();
+    let map;
+
+    // --- Fetch favorites ---
+    async function fetchUserFavoritesSet() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/favorites`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const favorites = await res.json();
+          userFavorites = new Set(favorites.map(fav => fav._id || fav));
+        }
+      } catch (err) {
+        console.error('Failed to load favorites:', err);
+      }
+    }
+
+    // --- Utility ---
+    function sanitizeId(name) {
+      return name.toLowerCase().replace(/\W+/g, '-');
+    }
+
+    // --- Fetch sites ---
+    async function fetchSites() {
+      const res = await fetch(`${API_BASE_URL}/places`);
+      return res.json();
+    }
+
+    // --- Fetch comments from backend ---
+    async function fetchComments(siteId) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/comments/${siteId}`);
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (err) {
+        console.error('Failed to fetch comments:', err);
+      }
+      return [];
+    }
+
+    async function postComment(siteId, text) {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not logged in');
+
+      const userId = localStorage.getItem('userId');
+      const username = localStorage.getItem('username');
+
+      const res = await fetch(`${API_BASE_URL}/api/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ siteId, userId, username, text }),
+      });
+
+      if (!res.ok) throw new Error('Failed to post comment');
+      return await res.json();
+    }
+
+    // --- Initialize map ---
+    function initMap() {
+      map = L.map('map');
+      map.setView([50.8325, 12.9236], 13, { animate: true, duration: 1.0 });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+    }
+
+    // --- Clear markers ---
+    function clearMarkers() {
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = [];
+    }
+
+    // --- Marker icons ---
+    const iconSize = [40, 40];      // uniform icon size
+const iconAnchor = [16, 32];    // anchor point (middle bottom)
+
+function createIcon(url) {
+  return L.icon({
+    iconUrl: url,
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+    iconSize: iconSize,
+    iconAnchor: iconAnchor,
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+}
+
+const iconMuseum = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png');
+const iconGallery = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png');
+const iconTheatre = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png');
+const iconAttractions = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png');
+const iconRestaurant = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png');
+
+const userLocationIcon = L.icon({
+  iconUrl: '/public/images/supply_1066213.png',
+  iconSize: [32, 32],   // make user location icon consistent too
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -30],
+});
+
+
+    // --- Show single place ---
+    function showSinglePlace(site) {
+      updateMapMarkers([site]);
+      renderList([site]);
+      mainContainer.classList.remove('hideList');
+
+      const cardId = `site-card-${site._id}`;
+      const card = document.getElementById(cardId);
+      if (card) {
+        document.querySelectorAll('.site-card.highlight').forEach(c => c.classList.remove('highlight'));
+        card.classList.add('highlight');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      if (markers.length > 0) {
+        markers[0].openPopup();
+      }
+    }
+
+    // --- Update map markers ---
+    function updateMapMarkers(sites) {
+      clearMarkers();
+      const bounds = L.latLngBounds();
+
+      sites.forEach(site => {
+        if (site.lat && site.lng) {
+          const latLng = L.latLng(parseFloat(site.lat), parseFloat(site.lng));
+
+          let markerIcon;
+          switch (site.category.toLowerCase()) {
+            case 'museum': markerIcon = iconMuseum; break;
+            case 'gallery': markerIcon = iconGallery; break;
+            case 'theatre': markerIcon = iconTheatre; break;
+            case 'attractions': markerIcon = iconAttractions; break;
+            case 'restaurant': markerIcon = iconRestaurant; break;
+            default: markerIcon = iconMuseum;
+          }
+
+          const marker = L.marker(latLng, { icon: markerIcon }).addTo(map);
+
+          marker.bindTooltip(site.name, {
+            permanent: true,
+            direction: 'top',
+            offset: [0, -10],
+            className: 'marker-label'
+          });
+
+          marker.bindPopup(site.description || 'No description available');
+
+          marker.on('click', () => {
+            marker.openPopup();
+            const selectedSite = allSites.find(s => s._id === site._id);
+            if (!selectedSite) return;
+            showSinglePlace(selectedSite);
+          });
+
+          markers.push(marker);
+          bounds.extend(latLng);
+        }
+      });
+
+      if (sites.length === 1) {
+        map.setView([parseFloat(sites[0].lat), parseFloat(sites[0].lng)], 17, { animate: true, duration: 1.0 });
+      } else if (sites.length === 2 && bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [130, 130], maxZoom: 14, animate: true, duration: 1.0 });
+      } else if (sites.length === 3 && bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [150, 150], maxZoom: 13, animate: true, duration: 1.0 });
+      } else if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [100, 100], animate: true, duration: 1.0 });
+      }
+    }
+
+    // --- Render list with async comments fetch ---
+    async function renderList(sites) {
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+
+      for (const site of sites) {
+        const id = site._id ? `site-card-${site._id}` : `site-card-${sanitizeId(site.name)}`;
+        const isFavorite = userFavorites.has(site._id);
+
+        const directionsLinks = userLocation ? 
+          `<div style="margin-top: 10px;">
+            <a href="https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${site.lat},${site.lng}&travelmode=walking" target="_blank" style="display: inline-flex; align-items: center; gap: 6px;">
+              <img src="/public/images/directions.png" alt="Directions" style="width: 20px; height: 20px;" /> Directions
+            </a>
+          </div>`
+         : 
+          `<div style="margin-top: 10px;">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${site.lat},${site.lng}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px;">
+              <img src="/public/images/directions.png" alt="Directions" style="width: 20px; height: 20px;" /> Directions
+            </a>
+          </div>`;
+
+        const comments = await fetchComments(site._id);
+
+        let commentsHtml = '<div class="comments-container">';
+        if (comments.length === 0) {
+          commentsHtml += '<p>No comments yet.</p>';
+        } else {
+          comments.forEach(c => {
+            commentsHtml += `<p>${c.text} <span class="comment-date">(${new Date(c.date).toLocaleDateString()})</span></p>`;
+          });
+        }
+        commentsHtml += '</div>';
+
+        const addCommentForm = 
+          `<form class="add-comment-form" data-site-id="${site._id}">
+            <input type="text" name="commentText" placeholder="Add a comment..." required />
+            <button type="submit">Submit</button>
+          </form>`;
+
+        const favButtonClass = isFavorite ? 'fav-btn favorited' : 'fav-btn unfavorited';
+        const favButtonText = '★';
+
+        // Local image overrides for specific places
+        let localImagePath = site.image || '/public/images/placeholder.png';
+        switch (site.name) {
+          case 'Saxon Railway Museum': localImagePath = '/public/images/saxon.jpg'; break;
+          case 'Museum of Natural History Chemnitz': localImagePath = '/public/images/natural-history.png'; break;
+          case 'State Museum of Archaeology (smac)': localImagePath = '/public/images/state-museum.jpg'; break;
+          case 'Kunstsammlungen Chemnitz': localImagePath = '/public/images/kunst.jpg'; break;
+          case 'Theater Chemnitz': localImagePath = '/public/images/theater-chemnitz.jpg'; break;
+          case 'Puppet Theatre at Spinnbau': localImagePath = '/public/images/spinnbau.jpg'; break;
+          case 'Karl Marx Monument (Nischel)': localImagePath = '/public/images/karl.webp'; break;
+          case 'Wasserschloss Klaffenbach': localImagePath = '/public/images/wasser.webp'; break;
+          case 'Aiko Sushi & Grill': localImagePath = '/public/images/aiko.jpg'; break;
+          case 'Miramar Chemnitz': localImagePath = '/public/images/miramar.png'; break;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'site-card';
+        if (isFavorite) card.classList.add('highlight');
+        card.id = id;
+        card.innerHTML = 
+          `<img src="${localImagePath}" alt="${site.name}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
+          <h3>
+            ${site.name}
+            <button class="${favButtonClass}" data-id="${site._id}" aria-label="Toggle Favorite" title="Toggle Favorite">${favButtonText}</button>
+          </h3>
+          <p><em>${site.description || ''}</em></p>
+          <p><strong>Opening Hours:</strong> ${site.hours}</p>
+          <p><strong>Parking:</strong> ${site.parking}</p>
+          ${directionsLinks}
+          ${commentsHtml}
+          ${addCommentForm}`;
+
+        list.appendChild(card);
+      }
+
+      // Favorite button handlers
+      document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const siteId = e.target.dataset.id;
+          const isFav = userFavorites.has(siteId);
+          const token = localStorage.getItem('token');
+
+          if (!token) {
+            alert('Please log in to manage favorites.');
+            return;
+          }
+
+          try {
+            const res = await fetch(`${API_BASE_URL}/api/auth/favorites/${siteId}`, {
+              method: isFav ? 'DELETE' : 'POST',
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (res.ok) {
+              if (isFav) {
+                e.target.classList.remove('favorited');
+                e.target.classList.add('unfavorited');
+                e.target.closest('.site-card').classList.remove('highlight');
+                userFavorites.delete(siteId);
+              } else {
+                e.target.classList.remove('unfavorited');
+                e.target.classList.add('favorited');
+                e.target.closest('.site-card').classList.add('highlight');
+                userFavorites.add(siteId);
+              }
+            } else {
+              alert('Failed to update favorites.');
+            }
+          } catch (err) {
+            alert('Error updating favorites: ' + err.message);
+          }
+        });
+      });
+
+      // Comment form handlers
+      document.querySelectorAll('.add-comment-form').forEach(form => {
+        form.addEventListener('submit', async e => {
+          e.preventDefault();
+
+          if (!localStorage.getItem('token')) {
+            alert('Please log in to add comments.');
+            return;
+          }
+
+          const siteId = form.getAttribute('data-site-id');
+          const input = form.querySelector('input[name="commentText"]');
+          const text = input.value.trim();
+          if (text.length === 0) return;
+
+          try {
+            await postComment(siteId, text);
+            const commentsContainer = form.previousElementSibling;
+            const updatedComments = await fetchComments(siteId);
+            if (commentsContainer) {
+              let newHtml = '';
+              updatedComments.forEach(c => {
+                newHtml += `<p>${c.text} <span class="comment-date">(${new Date(c.date).toLocaleDateString()})</span></p>`;
+              });
+              commentsContainer.innerHTML = newHtml;
+            }
+            input.value = '';
+          } catch (err) {
+            alert('Error adding comment: ' + err.message);
+          }
+        });
+      });
+    }
+
+    // --- Filters & search ---
+    function onCategoryChange() {
+      const category = document.getElementById('categoryFilter').value.toLowerCase();
+      document.getElementById('searchInput').value = '';
+
+      if (category === 'all') {
+        updateMapMarkers(allSites);
+        mainContainer.classList.add('hideList');
+      } else {
+        const filtered = allSites.filter(site => site.category.toLowerCase() === category);
+        updateMapMarkers(filtered);
+        mainContainer.classList.add('hideList');
+      }
+    }
+
+    function onSearchInput() {
+      const search = document.getElementById('searchInput').value.toLowerCase().trim();
+      document.getElementById('categoryFilter').value = 'all';
+
+      if (!search) {
+        updateMapMarkers(allSites);
+        mainContainer.classList.add('hideList');
+      } else {
+        const filtered = allSites.filter(site => site.name.toLowerCase().includes(search));
+        updateMapMarkers(filtered);
+        mainContainer.classList.add('hideList');
+      }
+    }
+
+    function onShowAllSitesClick(event) {
+      event.preventDefault();
+      document.getElementById('categoryFilter').value = 'all';
+      document.getElementById('searchInput').value = '';
+      updateMapMarkers(allSites);
+      renderList(allSites);
+
+      mainContainer.classList.remove('hideList');
+    }
+
+    function onHomeClick(event) {
+      event.preventDefault();
+
+      document.getElementById('categoryFilter').value = 'all';
+      document.getElementById('searchInput').value = '';
+
+      mainContainer.classList.add('hideList');
+
+      updateMapMarkers(allSites);
+
+      document.getElementById('list').innerHTML = '';
+    }
+
+    // --- User location button ---
+    document.getElementById('findMeBtn').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude } = position.coords;
+            userLocation = { lat: latitude, lng: longitude };
+            map.setView([latitude, longitude], 17, { animate: true, duration: 1.0 });
+            if (window.userMarker) {
+              window.userMarker.setLatLng([latitude, longitude]);
+            } else {
+              window.userMarker = L.marker([latitude, longitude], { icon: userLocationIcon }).addTo(map);
+            }
+          },
+          () => alert('Unable to retrieve your location.')
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    });
+
+    // --- Event listeners for desktop links ---
+    document.getElementById('homeLink').addEventListener('click', onHomeClick);
+    document.getElementById('categoryFilter').addEventListener('change', onCategoryChange);
+    document.getElementById('searchInput').addEventListener('input', onSearchInput);
+    document.getElementById('showAllSites').addEventListener('click', onShowAllSitesClick);
+
+    // --- Mobile menu toggle ---
+    mobileMenuBtn.addEventListener('click', () => {
+      const isVisible = mobileMenu.style.display === 'flex' || mobileMenu.style.display === 'inline-flex';
+      if (isVisible) {
+        mobileMenu.style.display = 'none';
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      } else {
+        mobileMenu.style.display = 'flex';
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        mobileMenu.setAttribute('aria-hidden', 'false');
+      }
+    });
+
+    // --- Mobile menu link handlers ---
+    showAllSitesMobile.addEventListener('click', (e) => {
+      e.preventDefault();
+      mobileMenu.style.display = 'none';
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryFilter').value = 'all';
+      updateMapMarkers(allSites);
+      renderList(allSites);
+      mainContainer.classList.remove('hideList');
+    });
+
+    categoryFilterMobile.addEventListener('change', () => {
+      mobileMenu.style.display = 'none';
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+
+      const category = categoryFilterMobile.value.toLowerCase();
+
+      if (category === 'all') {
+        updateMapMarkers(allSites);
+        mainContainer.classList.add('hideList');
+      } else {
+        const filtered = allSites.filter(site => site.category.toLowerCase() === category);
+        updateMapMarkers(filtered);
+        mainContainer.classList.add('hideList');
+      }
+    });
+
+    async function main() {
+      initMap();
+      await fetchUserFavoritesSet();
+
+      if (navigator.geolocation) {
+        await new Promise((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              resolve();
+            },
+            () => {
+              console.warn("Location access denied.");
+              resolve();
+            }
+          );
+        });
+      }
+
+      await mainLoadSitesAndRender();
+    }
+
+    async function mainLoadSitesAndRender() {
+      allSites = await fetchSites();
+      mainContainer.classList.add('hideList');
+      updateMapMarkers(allSites);
+      await renderList(allSites);
+    }
+
+    window.addEventListener('load', async () => {
+      checkLoginStatus();
+
+      // Load bio on page load so textarea shows bio if logged in or from localStorage
+      loadBioFromStorage();
+
+      navAvatar.addEventListener('click', async () => {
+        if (profileModal.style.display === 'block') {
+          profileModal.style.display = 'none';
+          return;
+        }
+
+        profileModal.style.display = 'block';
+        document.getElementById('profileUsername').textContent = localStorage.getItem('username') || '';
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+          profileForm.profileEmail.value = '';
+          document.getElementById('profileBio').value = '';
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (res.ok) {
+            const profile = await res.json();
+            profileForm.profileEmail.value = profile.email || '';
+            document.getElementById('profileBio').value = profile.bio || '';
+            localStorage.setItem('email', profile.email || '');
+            localStorage.setItem('bio', profile.bio || '');
+          }
+        } catch (err) {
+          console.error('Failed to load profile info:', err);
+        }
+      });
+
+      if (window.innerWidth <= 600) {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.placeholder = 'Search';
+        }
+      }
+
+      await main();
+    });
+  </script>
+</body>
+</html>

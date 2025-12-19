@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    .message.error { color: red; }
+    .message.success { color: green; }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      
+      <button type="submit" id="submitBtn">Login</button>
+      <div id="message" class="message"></div>
+    </form>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageEl = document.getElementById('message');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      messageEl.textContent = '';
+      messageEl.className = 'message';
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Logging in...';
+
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value.trim();
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Store token and user info locally
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('username', data.user.username);
+          localStorage.setItem('email', data.user.email);
+          localStorage.setItem('avatar', 'https://cdn-icons-png.flaticon.com/512/149/149071.png'); // default avatar
+
+          messageEl.textContent = 'Login successful! Redirecting...';
+          messageEl.classList.add('success');
+
+          setTimeout(() => {
+            window.location.href = 'index.html';  // Redirect to main page
+          }, 1000);
+        } else {
+          const errorData = await response.json();
+          messageEl.textContent = errorData.message || 'Login failed. Check credentials.';
+          messageEl.classList.add('error');
+        }
+      } catch {
+        messageEl.textContent = 'An unexpected error occurred. Please try again later.';
+        messageEl.classList.add('error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+      }
+    });
+  </script>
+</body>
+</html>

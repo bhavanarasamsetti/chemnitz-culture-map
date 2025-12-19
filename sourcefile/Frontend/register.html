@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register</title>
+  <script>
+    async function registerUser(event) {
+  event.preventDefault(); // prevent form default submit
+
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true;
+
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  try {
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    const result = await response.json();
+
+    console.log('Register response:', result); // For debugging
+
+    if (response.ok) {
+      alert(`Registered successfully! Welcome, ${result.user.username}`);
+      // Optionally redirect or reset form here
+    } else {
+      alert(result.message || 'Registration failed');
+    }
+  } catch (error) {
+    alert('An error occurred: ' + error.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+
+  </script>
+</head>
+<body>
+  <h2>Register</h2>
+  <form onsubmit="registerUser(event)">
+    <input id="username" placeholder="Username" required /><br />
+    <input id="email" type="email" placeholder="Email" required /><br />
+    <input id="password" type="password" placeholder="Password" required /><br />
+    <button id="registerBtn" type="submit">Register</button>
+  </form>
+</body>
+</html>

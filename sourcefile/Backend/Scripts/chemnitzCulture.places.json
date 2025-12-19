@@ -1,0 +1,150 @@
+[{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9ace"
+  },
+  "name": "Theater Chemnitz",
+  "description": "Municipal theatre hosting opera, ballet, drama, symphony, and puppet shows.",
+  "location": "Chemnitz",
+  "category": "theatre",
+  "image": "images/theater-chemnitz.jpg",
+  "lat": 50.8334,
+  "lng": 12.9289,
+  "hours": "Check schedule online",
+  "parking": "Adjacent city parking garage",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9ad1"
+  },
+  "name": "Wasserschloss Klaffenbach",
+  "description": "Renaissance moated castle with galleries, café, and seasonal events.",
+  "location": "Chemnitz",
+  "category": "attractions",
+  "image": "images/wasser.jpg",
+  "lat": 50.7508,
+  "lng": 12.8781,
+  "hours": "Tue–Sun 11:00–17:00",
+  "parking": "Free on-site parking",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9acf"
+  },
+  "name": "Puppet Theatre at Spinnbau",
+  "description": "Historic puppet theatre in a former factory offering classic and modern plays.",
+  "location": "Chemnitz",
+  "category": "theatre",
+  "image": "images/spinnbau.jpg",
+  "lat": 50.8329,
+  "lng": 12.9275,
+  "hours": "Varies by performance",
+  "parking": "Nearby public parking",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9aca"
+  },
+  "name": "Saxon Railway Museum",
+  "description": "Historic locomotive depot with roundhouses and working steam engines.",
+  "location": "Chemnitz",
+  "category": "museum",
+  "image": "/images/saxon.jpg",
+  "lat": 50.8621,
+  "lng": 12.9677,
+  "hours": "Wed–Sun 10:00–17:00",
+  "parking": "On-site parking available",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9ad3"
+  },
+  "name": "Miramar Chemnitz",
+  "description": "Upscale German cuisine with panoramic views and elegant atmosphere.",
+  "location": "Chemnitz",
+  "category": "restaurant",
+  "image": "images/Miramar.jpg",
+  "lat": 50.8414,
+  "lng": 12.9116,
+  "hours": "Mon–Sat 17:00–23:00",
+  "parking": "On-site and nearby parking",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9acd"
+  },
+  "name": "Kunstsammlungen Chemnitz",
+  "description": "Expressionist and modernist art collection in multiple historic buildings.",
+  "location": "Chemnitz",
+  "category": "gallery",
+  "image": "images/kunst.jpg",
+  "lat": 50.831,
+  "lng": 12.925,
+  "hours": "Tue–Sun 11:00–18:00",
+  "parking": "City center public parking",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9acc"
+  },
+  "name": "State Museum of Archaeology (smac)",
+  "description": "Showcasing Saxon regional history with a stunning Bauhaus/postwar building.",
+  "location": "Chemnitz",
+  "category": "museum",
+  "image": "images/state-museum.jpg",
+  "lat": 50.831,
+  "lng": 12.923,
+  "hours": "Tue–Sun 10:00–18:00",
+  "parking": "Nearby parking garages",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9acb"
+  },
+  "name": "Museum of Natural History Chemnitz",
+  "description": "Fossils and petrified forest from 291 million years ago, educational exhibits.",
+  "location": "Chemnitz",
+  "category": "museum",
+  "image": "images/natural-history.jpg",
+  "lat": 50.8305,
+  "lng": 12.9287,
+  "hours": "Tue–Sun 10:00–18:00",
+  "parking": "Underground parking available",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9ad0"
+  },
+  "name": "Karl Marx Monument (Nischel)",
+  "description": "Iconic 7.1-meter bronze sculpture symbolizing Chemnitz’s cultural identity.",
+  "location": "Chemnitz",
+  "category": "attractions",
+  "image": "images/karl.jpg",
+  "lat": 50.8377,
+  "lng": 12.926,
+  "hours": "Open 24 hours",
+  "parking": "Public parking nearby",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c16e2b295170c44be9ad2"
+  },
+  "name": "Aiko Sushi & Grill",
+  "description": "Popular Japanese all-you-can-eat sushi with grilled dishes and tablet ordering.",
+  "location": "Chemnitz",
+  "category": "restaurant",
+  "image": "images/aiko.jpg",
+  "lat": 50.8215,
+  "lng": 12.9152,
+  "hours": "Tue–Sun 12:00–22:00",
+  "parking": "Street parking nearby",
+  "__v": 0
+}]

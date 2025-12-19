@@ -1,0 +1,84 @@
+[{
+  "_id": {
+    "$oid": "685d5a0a37fb9e8d6d113ca0"
+  },
+  "username": "Bhavana",
+  "email": "bhavana10.n@gmail.com",
+  "password": "$2b$10$5pR9Br0ZLXBmj7Gw/P.AsuyvAYcgH2ZRTkhi6YB80y8EMIsdZbjEC",
+  "favorites": [
+    {
+      "$oid": "685c16e2b295170c44be9ad3"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9ad2"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9ad1"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9acf"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9aca"
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-06-26T14:32:42.750Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-30T20:55:20.950Z"
+  },
+  "__v": 213,
+  "avatar": "",
+  "bio": ""
+},
+{
+  "_id": {
+    "$oid": "68622373c668f2525252d9ea"
+  },
+  "username": "Shannu",
+  "email": "bhavanarasamsetti@gmail.com",
+  "password": "$2b$10$RVlMjJGnwehbaFgGbOHJyuypnicgpGDXL8p6n8/e8ah/XZyMR9jYS",
+  "favorites": [
+    {
+      "$oid": "685c16e2b295170c44be9aca"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9acb"
+    },
+    {
+      "$oid": "685c16e2b295170c44be9acc"
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-06-30T05:41:07.122Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-30T07:49:45.135Z"
+  },
+  "__v": 5,
+  "avatar": "",
+  "bio": "travel life"
+},
+{
+  "_id": {
+    "$oid": "686417f0d85ef2a1a111f45f"
+  },
+  "username": "leo",
+  "email": "test@gmail.com",
+  "password": "$2b$10$B0i5Q5jJe2sdQldqViR7f.2RdcKr88.vOTSHHXmzkrbR.jStx5cf.",
+  "favorites": [
+    {
+      "$oid": "685c16e2b295170c44be9acd"
+    }
+  ],
+  "bio": "life",
+  "avatar": "",
+  "createdAt": {
+    "$date": "2025-07-01T17:16:32.535Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-01T17:18:01.375Z"
+  },
+  "__v": 1
+}]
