@@ -16,6 +16,18 @@ This project was developed as part of academic coursework and demonstrates full-
 
 ---
 
+## 📸 Screenshots
+
+### 🗺️ Home / Map View
+![Home Map](screenshots/home-map.png)
+
+### 🔐 Login Screen
+![Login](screenshots/login.png)
+
+### 📍 Place Details View
+![Place Details](screenshots/place-details.png)
+
+
 ## 🛠 Tech Stack
 
 ### Frontend
