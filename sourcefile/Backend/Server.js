@@ -34,7 +34,7 @@ const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/sites', siteRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/places', placeRoutes);
+app.use('/api/places', placeRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/user', userRoutes); 
 
