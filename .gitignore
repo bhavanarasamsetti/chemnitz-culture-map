@@ -1,10 +1,11 @@
-# Ignore environment variables
-Backend/.env
+# Environment variables
+sourcefile/Backend/.env
 
-# Ignore node dependencies
-Backend/node_modules/
+# Node dependencies
+sourcefile/Backend/node_modules/
 
 # macOS files
 .DS_Store
 __MACOSX/
+
 
