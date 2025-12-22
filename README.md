@@ -1,190 +1,106 @@
-🌍 Chemnitz Culture Map
+# Chemnitz Culture Map – Web Application
 
 Chemnitz Culture Map is a full-stack web application that allows users to explore cultural locations and points of interest in the city of Chemnitz through an interactive, map-based interface.
 
-The project was initially developed as part of academic coursework at TU Chemnitz and later extended into a fully deployed, production-ready application, showcasing real-world full-stack development, authentication, and deployment practices.
+The project was developed as part of academic coursework at TU Chemnitz and later extended into a fully functional, deployed web application demonstrating real-world web development practices.
 
-🌐 Live Demo
+---
 
-🔗 Live Application:
+## Project Overview
+
+The application enables users to discover cultural places on an interactive map, view detailed information, and interact with content through user accounts.
+
+It focuses on combining geospatial visualization with user-driven features such as authentication, favorites, and comments.
+
+---
+
+## Key Features
+
+- Interactive map of Chemnitz using Leaflet.js and OpenStreetMap  
+- Categorized cultural locations with custom map markers  
+- User registration and login using JWT authentication  
+- User profile management with editable information  
+- Save favorite locations  
+- Comment system for cultural places  
+- RESTful backend APIs for users, places, comments, and favorites  
+- Secure data storage using MongoDB Atlas  
+- Responsive UI for desktop and mobile devices  
+
+---
+
+## Screenshots
+
+### Map View
+![Chemnitz Culture Map – Map View](screenshots/map_view.png)
+
+### Login & Authentication
+![Chemnitz Culture Map – Login](screenshots/login.png)
+
+### Place Details
+![Chemnitz Culture Map – Place Details](screenshots/place_details.png)
+
+---
+
+## Technology Stack
+
+### Frontend
+- HTML  
+- CSS  
+- JavaScript  
+- Leaflet.js (OpenStreetMap)
+
+### Backend
+- Node.js  
+- Express.js  
+- MongoDB Atlas  
+- Mongoose  
+- REST APIs  
+- JSON Web Tokens (JWT)
+
+---
+
+## Live Demo
+
+🔗 **Live Application**  
 https://chemnitz-culture-backend.onrender.com
 
-⚠️ Note: This application is hosted on Render’s free tier.
-The first request may take 30–40 seconds due to cold start behavior.
+> **Note:** The application is hosted on Render’s free tier.  
+> The first request may take 30–40 seconds due to cold start behavior.
 
-✨ Key Features
+---
 
-Interactive map of Chemnitz powered by Leaflet.js
+## Repository Structure
 
-Categorized cultural locations with custom map markers
-
-User registration and login using JWT authentication
-
-User profile management with editable bio
-
-Save favorite locations
-
-Comment system for cultural places
-
-RESTful backend API for users, places, comments, and favorites
-
-Secure data storage using MongoDB Atlas
-
-Responsive UI for desktop and mobile devices
-
-## 📸 Screenshots
-
-### 🗺️ Home / Map View
-![Home Map](screenshots/home-map.png)
-
-### 🔐 Login Screen
-![Login](screenshots/login.png)
-
-### 📍 Place Details View
-![Place Details](screenshots/place-details.png)
-
-
-🛠️ Technology Stack
-Frontend
-
-HTML
-
-CSS
-
-JavaScript
-
-Leaflet.js (OpenStreetMap)
-
-Backend
-
-Node.js
-
-Express.js
-
-MongoDB Atlas
-
-Mongoose
-
-JSON Web Tokens (JWT)
-
-📁 Project Structure
 chemnitz-culture-map/
 ├── sourcefile/
-│   ├── Frontend/        # Client-side code
-│   ├── Backend/         # Server-side API
-├── screenshots/         # Application screenshots
-├── UserGuide.pdf        # Academic documentation
-├── README.md
-├── .gitignore
-
-🚀 Local Development Setup
-Prerequisites
-
-Node.js (v16 or higher)
-
-npm
-
-MongoDB Atlas account
-
-🔧 Backend Setup
-
-Navigate to the backend directory:
-
-cd sourcefile/Backend
+│ ├── Frontend/ # Client-side code
+│ └── Backend/ # Server-side API
+├── screenshots/ # Application screenshots
+├── UserGuide.pdf # Academic documentation
+└── README.md
 
 
-Install dependencies:
+---
 
-npm install
+## Security & Configuration Notes
 
+- Authentication is implemented using JWT  
+- Environment variables are used for sensitive configuration  
+- `.env` files and `node_modules` are excluded from version control  
+- MongoDB credentials are not included in this repository  
 
-Create a .env file in the Backend folder:
+---
 
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-PORT=4000
+## Deployment
 
+- Backend deployed on Render  
+- Database hosted on MongoDB Atlas  
+- Frontend served as static files via the Express backend  
+- Environment variables configured securely in the deployment platform  
 
-Start the backend server:
+---
 
-node Server.js
+## Author
 
-
-Expected output:
-
-Server running on http://localhost:4000
-MongoDB connected
-
-🎨 Frontend Setup
-
-Navigate to the frontend directory:
-
-cd sourcefile/Frontend
-
-
-Open index.html in your browser
-(or use Live Server in VS Code)
-
-Ensure the API base URL is set correctly in index.html:
-
-const API_BASE_URL = 'http://localhost:4000';
-
-🔐 Authentication & Security
-
-Authentication implemented using JWT
-
-Tokens stored securely in browser localStorage
-
-Protected routes require a valid JWT
-
-Environment variables used for secrets
-
-Sensitive files (.env, node_modules) excluded from version control
-
-🚀 Deployment
-
-Backend deployed on Render
-
-Database hosted on MongoDB Atlas
-
-Environment variables managed securely in Render
-
-Frontend served as static files via the Express backend
-
-Production API base URL configured for deployed environment
-
-📄 Documentation
-
-Detailed project documentation is available in:
-
-📄 UserGuide.pdf
-
-Contents include:
-
-Project overview
-
-Functional requirements
-
-System architecture
-
-UI screenshots
-
-Implementation details
-
-⚠️ Important Notes
-
-MongoDB credentials are not included in this repository
-
-.env and node_modules are intentionally excluded
-
-An active MongoDB Atlas cluster is required
-
-Free-tier hosting may cause initial loading delays
-
-👩‍💻 Author
-
-Bhavana Rasamsetti
-Web Engineering Master’s Student – TU Chemnitz
-
-Technologies used in this project:
-Node.js · Express.js · MongoDB Atlas · Mongoose · JavaScript · HTML · CSS · Leaflet.js · REST APIs · JWT Authentication
+**Bhavana Rasamsetti**  
+Web Engineering – TU Chemnitz  
