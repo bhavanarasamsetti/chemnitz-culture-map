@@ -31,13 +31,13 @@ It focuses on combining geospatial visualization with user-driven features such 
 ## Screenshots
 
 ### Map View
-![Chemnitz Culture Map – Map View](screenshots/map_view.png)
+![Chemnitz Culture Map – Map View](screenshots/home-map.png)
 
 ### Login & Authentication
 ![Chemnitz Culture Map – Login](screenshots/login.png)
 
 ### Place Details
-![Chemnitz Culture Map – Place Details](screenshots/place_details.png)
+![Chemnitz Culture Map – Place Details](screenshots/place-details.png)
 
 ---
 
